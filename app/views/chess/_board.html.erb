@@ -1,0 +1,20 @@
+<table id="board" data-turn="<%= @chess.turn.to_s %>">
+  <% @chess.rows_array.each_with_index do |row, i| %>
+    <tr>
+      <%row.each_with_index do |piece, j| %>
+        <% color = piece.top? ? "blue" : "red" %>
+        <% (background = i % 2 == 0 ? "red" : "blue")%>
+        <% (background = i % 2 == 0 ? "blue" : "red") if j % 2 != 0 %>
+        <td class="<%= background %>" data-coord="<%= "#{@chess.letters[j]}#{i+1}" %>" data-moves="<%= piece.possible_moves( Coordinate.new(x: j + 1, y: i + 1), @chess.board).map { |coord| coord.to_s } %>" data-color="<%= color %>">
+          <% if !piece.is_a?(NoPiece) %> 
+          <div class="piece <%="#{piece.class.to_s.downcase} #{piece.color} #{color}-team"%>">
+              <%= image_tag "#{color}_#{piece.class.to_s.downcase}.png" %>
+          </div>
+            <% else %>
+              <%# <%= piece.to_s %>
+            <% end %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>

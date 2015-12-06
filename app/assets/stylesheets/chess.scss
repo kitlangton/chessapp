@@ -1,0 +1,108 @@
+// Place all the styles related to the chess controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+//
+$chess-color: #fc3232;
+
+body {
+  // perspective: 1000px;
+  background-color: $chess-color;
+  color: black;
+  transition: background-color 1s;
+}
+
+
+.no-transition {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+  transition: none !important;
+}
+
+.center {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.logo {
+  img {
+    width: 300px;
+    height: auto;
+  }
+
+  &.minimal {
+    img {
+      width: 100px;
+    }
+  }
+}
+
+
+.btn-chess {
+  background-color: black;
+  color: white;
+  &:hover {
+    color: $chess-color;
+  }
+}
+
+.red {
+  background-color: $chess-color;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.possible_move {
+  box-shadow: inset 0px 0px 40px rgba(255,255,255,1);
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+#board {
+  // transform: rotateX(40deg);
+  margin: 0 auto;
+  td {
+    transition: all 0.5s;
+    text-align: center;
+    width: 70px;
+    height: 70px;
+    img {
+      width: 70px;
+      height: 70px;
+      transition: transform 0.3s;
+    }
+  }
+}
+
+.piece {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.selected {
+  img {
+    transform: translateY(-10px);
+  }
+}
+
+.stone {
+  img {
+    height: 40px;
+    width: auto;
+  }
+}
+
+@keyframes lift {
+  0% {
+    transform: translateY(0px);
+  }
+
+  100% {
+    transform: translateY(5px);
+  }
+}

@@ -1,0 +1,40 @@
+<div class="container-fluid">
+
+<div class="center">
+  <br>
+  <div class="logo minimal">
+    <%= image_tag('chess_logo_minimal.png')%>
+  </div>
+  <br>
+
+  <div class="row">
+
+    <div class="col-lg-2">
+      <div class="graveyard">
+        <% @chess.graveyard.each do |dead| %>
+          <div class="col-sm-2 stone">
+            <% color = dead.top? ? "blue" : "red" %>
+            <%= image_tag "#{color}_#{dead.class.to_s.downcase}.png" %>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+
+    <div class="col-sm-8">
+      <div class="board-container">
+        <%= render partial: 'board'%>
+      </div>
+    </div>
+
+  </div>
+  <%= form_for :move, url: 'move', remote: true, method: :post do |f| %>
+  <%= f.hidden_field :from %>
+  <%= f.hidden_field :to %>
+  <%# <%= f.submit %>
+
+  <% end %>
+
+</div>
+
+</div>
