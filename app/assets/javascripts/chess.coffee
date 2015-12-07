@@ -10,8 +10,16 @@
 #     $('body').removeClass "blue"
 
 checkmated = ->
-  $('.checkmate').find(".piece:not(.king)").velocity
+  $(".in-check").removeClass 'in-check'
+  $(".logo").velocity
     opacity: 0
+  $(".stone").velocity 'transition.slideUpOut',
+    stagger: 50
+    drag: true
+  ,
+    1500
+  $('.checkmate').find(".piece:not(.king)").velocity
+    opacity: 0.5
   ,
     duration: 500
   $('.checkmate').find(".king").velocity
@@ -22,12 +30,16 @@ checkmated = ->
     delay: 500
     duration: 500
   $('.checkmate').find("td").addClass("checkmate-bg")
+  $('body').velocity
+    backgroundColor: "#000"
 
 update_state = (player) ->
   $.ajax
     type: "GET"
     url: "/chess/game_state"
     success: (data) ->
+      if data.status == 'checkmate'
+        checkmated()
       unless !window.updated && data.turn == player
         setTimeout ->
           update_state(player)
@@ -60,23 +72,24 @@ update_state = (player) ->
 
 
 $ ->
-  $(".piece").css
-    opacity: 0
-  $(".stone").css
-    opacity: 0
-  $('#board').velocity "transition.slideUpIn"
-  setTimeout ->
-    $(".piece").velocity 'transition.slideDownIn',
-      stagger: 50
-      drag: true
-  ,
-    500
-  setTimeout ->
-    $(".stone").velocity 'transition.slideDownIn',
-      stagger: 50
-      drag: true
-  ,
-    1500
+  unless $('#board').hasClass('checkmate')
+    $(".piece").css
+      opacity: 0
+    $(".stone").css
+      opacity: 0
+    $('#board').velocity "transition.slideUpIn"
+    setTimeout ->
+      $(".piece").velocity 'transition.slideDownIn',
+        stagger: 50
+        drag: true
+    ,
+      500
+    setTimeout ->
+      $(".stone").velocity 'transition.slideDownIn',
+        stagger: 50
+        drag: true
+    ,
+      1500
 
   window.turn = $("#board").data('turn')
   if window.turn == "top"
@@ -112,8 +125,6 @@ $ ->
       for move in moves
         $("td[data-coord='"+move+"']").addClass("possible_move")
     else
-      if $('table').hasClass 'checkmate'
-        checkmated()
       unless $(@).hasClass('possible_move')
         piece.removeClass("selected")
         $('.possible_move').each ->

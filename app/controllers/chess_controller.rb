@@ -37,7 +37,7 @@ class ChessController < ApplicationController
     turn = @chess.color_to_red_blue(@chess.turn)
 
     respond_to do |format|
-      format.json { render json: { success: true, turn: turn, html: (render_to_string 'chess/_board.html.erb', layout: false), graveyard: (render_to_string 'chess/_graveyard.html.erb', layout: false) } }
+      format.json { render json: { success: true, status: @chess.status, turn: turn, html: (render_to_string 'chess/_board.html.erb', layout: false), graveyard: (render_to_string 'chess/_graveyard.html.erb', layout: false) } }
     end
   end
 
