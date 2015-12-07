@@ -22,8 +22,8 @@ class ChessController < ApplicationController
     @player = session[:team]
 
     # reset
-    # game.state = Chess.new
-    # game.save
+    game.state = Chess.new
+    game.save
 
     @chess = game.state
   end
