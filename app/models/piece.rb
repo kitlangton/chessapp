@@ -13,6 +13,35 @@ class Piece
     []
   end
 
+  def color_to_red_blue
+    if color == :top
+      "blue"
+    elsif color == :bottom
+      "red"
+    end
+  end
+
+  def check_moves(coordinate, moves, board)
+
+    if board.chess.shadow
+      return moves
+    end
+
+    unless board.chess.turn == color
+      return moves
+    end
+
+    moves.map do |move|
+      shadow_board = board.chess.dup
+      shadow_board.shadow_move(coordinate.to_s, move.to_s)
+      unless shadow_board.check == color_to_red_blue
+        move
+      else
+        nil
+      end
+    end.compact
+  end
+
   def other_color
     if top?
       :bottom
@@ -83,7 +112,7 @@ class Rook < Piece
       end
     end
 
-    moves
+    check_moves(coordinate, moves, board)
   end
 
   def possible_attacks(coordinate, board)
@@ -105,7 +134,7 @@ class Knight < Piece
       end
     end
 
-    moves
+    check_moves(coordinate, moves, board)
   end
 
   def possible_attacks(coordinate, board)
@@ -134,7 +163,7 @@ class Bishop < Piece
       end
     end
 
-    moves
+    check_moves(coordinate, moves, board)
   end
 
   def possible_attacks(coordinate, board)
@@ -147,7 +176,6 @@ class Queen < Piece
   def to_s
     'Q'
   end
-
 
   def possible_moves(coordinate, board)
     moves = []
@@ -169,7 +197,7 @@ class King < Piece
   def possible_moves(coordinate, board)
     enemy_moves = board.moves_for_team(other_color)
 
-    possible_attacks(coordinate, board).map do |coord|
+    moves = possible_attacks(coordinate, board).map do |coord|
       if friendly?(coord.piece)
         nil
       elsif enemy_moves.any? { |move| move == coord}
@@ -178,6 +206,8 @@ class King < Piece
         coord
       end
     end.compact
+
+    check_moves(coordinate, moves, board)
   end
 
   def possible_attacks(coordinate, board)
@@ -223,8 +253,11 @@ class Pawn < Piece
     moves << attacks
 
 
-    moves.flatten(1).compact
+    moves = moves.flatten(1).compact
+
+    check_moves(coordinate, moves, board)
   end
+
 
   def possible_attacks(coordinate, board)
     attacks = []

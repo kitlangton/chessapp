@@ -18,14 +18,25 @@ end
 
 class Chess
 
-  attr_accessor :board, :turn, :graveyard
+  attr_accessor :board, :turn, :graveyard, :check, :shadow, :status
 
   def initialize
-    @board = Board.new
+    @board = Board.new(self)
     @turn = :bottom
+    @status = nil
+    @check = nil
     @new_dead = []
+    @shadow = false
     @graveyard = []
     set_up_board
+  end
+
+  def initialize_copy(source)
+    super
+    @shadow = true
+    @check = king_in_check?
+    @board = source.board.dup
+    @board.board = @board.board.collect &:dup
   end
 
 
@@ -44,10 +55,37 @@ class Chess
     chess
   end
 
+  def which_king_in_check?
+    coord = board.board.find { |coord| coord.piece.is_a?(King) }
+    if board.in_check?(coord)
+      coord.piece.color
+    end
+  end
+
+  def king_in_check?
+    coord = board.board.find { |coord| coord.piece.is_a?(King) && coord.piece.color == turn }
+    if board.in_check?(coord)
+      color_to_red_blue(coord.piece.color)
+    end
+  end
+
+  def color_to_red_blue(color)
+    if color == :top
+      "blue"
+    elsif color == :bottom
+      "red"
+    end
+  end
+
   def new_dead
-    new = @new_dead
+    dead = @new_dead
     @new_dead = []
-    new
+    dead
+  end
+
+  def shadow_move(from, to)
+    board.move_piece(from.to_coord, to.to_coord)
+    @check = king_in_check?
   end
 
   def move_piece(from, to)
@@ -57,10 +95,20 @@ class Chess
 
     if taken_piece.top? || taken_piece.bottom?
       graveyard << taken_piece
-      new_dead << taken_piece
+      @new_dead << taken_piece
     end
 
     @turn = (@turn == :top ? :bottom : :top)
+    @check = nil
+    @check = king_in_check?
+
+    if board.possible_moves_for_team(turn).size == 0
+      if @check == color_to_red_blue(turn)
+        @status = "checkmate"
+      else
+        @status = "stalemate"
+      end
+    end
   end
 
   def moves_for(coordinate)
@@ -200,14 +248,15 @@ end
 
 class Board
 
-  attr_accessor :board
+  attr_accessor :board, :chess
 
-  def initialize
+  def initialize(chess)
+    @chess = chess
     @board = []
     set_up_board
   end
 
-  def moves_for_team(color)
+  def possible_moves_for_team(color)
     coords = board.map do |coord|
       if coord.piece.color == color
         coord
@@ -219,8 +268,8 @@ class Board
     moves = []
 
     coords.each do |coord|
-      possible_attacks = coord.piece.possible_attacks(coord, self)
-      moves <<  possible_attacks
+      possible_moves = coord.piece.possible_moves(coord, self)
+      moves <<  possible_moves
     end
 
     moves.flatten.uniq
@@ -244,6 +293,7 @@ class Board
 
     moves.flatten.uniq
   end
+
 
   def in_check?(coordinate)
     piece = get_piece(coordinate)

@@ -9,19 +9,11 @@
 
   <div class="row">
 
-    <div class="col-lg-2">
-      <div class="graveyard">
-        <% @chess.graveyard.each do |dead| %>
-          <div class="col-sm-2 stone">
-            <% color = dead.top? ? "blue" : "red" %>
-            <%= image_tag "#{color}_#{dead.class.to_s.downcase}.png" %>
-          </div>
-        <% end %>
-
-      </div>
+    <div class="col-lg-3 graveyard-container">
+        <%= render partial: 'graveyard'%>
     </div>
 
-    <div class="col-sm-8">
+    <div class="col-sm-6">
       <div class="board-container">
         <%= render partial: 'board'%>
       </div>
@@ -36,5 +28,6 @@
   <% end %>
 
 </div>
+<%= audio_tag "swish.mp3", class: "audio-play" %>
 
 </div>

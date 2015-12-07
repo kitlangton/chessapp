@@ -48,10 +48,12 @@ body {
 }
 
 .red {
+  transition: all 0.5s;
   background-color: $chess-color;
 }
 
 .blue {
+  transition: all 0.5s;
   background-color: blue;
 }
 
@@ -59,6 +61,15 @@ body {
   box-shadow: inset 0px 0px 40px rgba(255,255,255,1);
   &:hover {
     cursor: pointer;
+  }
+}
+
+.checkmate-bg {
+  &.red {
+    background-color: rgba(red,0.0);
+  }
+  &.blue {
+    background-color: rgba(blue,0.0);
   }
 }
 
@@ -90,10 +101,62 @@ body {
   }
 }
 
+.graveyard-container {
+  // margin: 0 auto;
+  // text-align: center;
+}
+
+.new-dead {
+  animation: fade-in-dead 1s 1;
+}
+
+.ghost {
+  position: absolute;
+  top: -10px;
+  img {
+    opacity: 0;
+    transition: all 0.5s;
+  }
+  animation: float 1s infinite;
+}
+
 .stone {
+  margin-bottom: 10px;
+  &:hover {
+    .ghost {
+      img {
+        opacity: 0.6;
+      }
+    }
+  }
+  opacity: 1;
+  position: relative;
   img {
     height: 40px;
     width: auto;
+  }
+}
+
+.in-check {
+  animation: in-check infinite 1s;
+}
+
+@keyframes fade-in-dead {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes in-check {
+  50% {
+    background-color: rgba(255,255,255,0.7);
+  }
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(5px);
   }
 }
 

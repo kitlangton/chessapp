@@ -3,6 +3,11 @@ Rails.application.routes.draw do
 
   get 'chess/show', as: 'new_game', to: 'chess#show'
 
+  get 'chess/pick_red', as: 'pick_red', to: 'chess#pick_red'
+  get 'chess/pick_blue', as: 'pick_blue', to: 'chess#pick_blue'
+
+  get 'chess/game_state', as: 'game_state', to: 'chess#game_state'
+
   post 'chess/move', as: 'move', to: 'chess#move'
 
   # The priority is based upon order of creation: first created -> highest priority.

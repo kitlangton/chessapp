@@ -1,0 +1,13 @@
+<div class="graveyard">
+<div class="row">
+  <% @chess.graveyard.each do |dead| %>
+    <div class="col-sm-2 stone <%= "new-dead" if @new_dead && @new_dead.any? { |x| x == dead} %>">
+      <% color = dead.top? ? "blue" : "red" %>
+      <%= image_tag "#{color}_grave.png" %>
+      <div class="ghost">
+        <%= image_tag "#{color}_#{dead.class.to_s.downcase}.png" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+</div>

@@ -174,7 +174,7 @@ describe Chess do
     king = chess.place_piece_on_board(King, :bottom, "d4")
     chess.place_piece_on_board(Bishop, :top, "e5")
 
-    puts chess.render_moves_for(king, 'd4'.to_coord)
+    # puts chess.render_moves_for(king, 'd4'.to_coord)
 
     expect(chess.board.in_check?('d4'.to_coord)).to eq true
     expect(chess.board.in_check?('a1'.to_coord)).to eq false
@@ -187,17 +187,17 @@ describe Chess do
     expect(chess.graveyard).to eq [pawn]
   end
 
-end
+  context 'king in check' do
+    it 'pieces can only move if they remove the king from check' do
+      chess = Chess.new
+      chess.check = true
+      chess.turn = :bottom
+      king = chess.place_piece_on_board(King, :bottom, "d5")
+      enemy_bishop = chess.place_piece_on_board(Bishop, :top, "e4")
+      pawn = chess.place_piece_on_board(Pawn, :bottom, "f5")
 
-describe Board do
-
-  it 'can store pieces at a given position' do
-    board = Board.new
-    piece = double(:piece)
-    coordinate = Coordinate.new(x: 5, y:5, piece: nil)
-    board.place_piece(piece, coordinate)
-    expect(board.get_piece(coordinate)).to eq piece
+      puts chess.render_moves_for(pawn, 'f5'.to_coord)
+      expect(chess.moves_for("f5")).to eq ['e4'.to_coord]
+    end
   end
-
 end
-
