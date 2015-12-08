@@ -7,13 +7,13 @@ class ChessController < ApplicationController
 
   def pick_red
     session[:team] = 'red'
-    hash = Game.create(state: Chess.new, stats: Stats.new)
+    hash = Game.create(state: Chess.new, stats: Stats.new).to_param
     redirect_to new_game_url(id: hash)
   end
 
   def pick_blue
     session[:team] = 'blue'
-    hash = Game.create(state: Chess.new, stats: Stats.new)
+    hash = Game.create(state: Chess.new, stats: Stats.new).to_param
     redirect_to new_game_path(id: hash)
   end
 
