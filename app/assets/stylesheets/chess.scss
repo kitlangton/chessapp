@@ -7,11 +7,10 @@ $chess-color: #fc3232;
 body {
   perspective: 1000px;
   transform: translateZ(0);
-  background-color: $chess-color;
+  background-color: white;
   color: black;
   transition: background-color 1s;
 }
-
 
 .no-transition {
   -webkit-transition: none !important;
@@ -26,6 +25,75 @@ body {
   margin: 0 auto;
 }
 
+.choose-team {
+  opacity: 0;
+  width: 500px;
+  margin: 0 auto; 
+}
+
+.other-team-position {
+  position: absolute;
+}
+
+.selections {
+  opacity: 0;
+  margin-top: 30px;
+  img {
+    width: 100px;
+    height: auto;
+  }
+}
+
+.them-card {
+  height: 0px;
+  opacity: 0;
+}
+
+.them {
+  position: relative;
+  bottom: 145px;
+  img {
+    width: 100px;
+    height: auto;
+  }
+}
+
+.card-choose {
+  z-index: 5;
+  background-color: transparent;
+  .front {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  img {
+    width: 100px;
+    height: auto;
+  }
+  .back {
+    z-index: -5;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    img {
+      transform: rotateY(180deg)
+    }
+  }
+}
+
+.ahead {
+  z-index: 100;
+}
+
+.card-button {
+  position: relative;
+  background-color: transparent;
+  img {
+    position: relative;
+    width: 100px;
+    height: auto;
+  }
+}
 
 .logo {
   transform: translateZ(-50);
@@ -228,6 +296,26 @@ body {
     opacity: 0.7;
   }
 }
+
+.active-button {
+  cursor: pointer;
+  img {
+    transition: all 0.5s;
+  }
+  &:hover {
+    &.select-blue {
+      img{
+        box-shadow: 0 0 15px rgba(blue,0.7);
+      }
+    }
+    &.select-red {
+      img{
+        box-shadow: 0 0 15px rgba(red,0.7);
+      }
+    }
+  }
+}
+
 
 
 

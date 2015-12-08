@@ -1,13 +1,45 @@
-<div class="container">
+<div class="container-fluid white">
 
-<div class="center">
-  <br>
-  <div class="logo">
-    <%= image_tag('chess_logo.png')%>
+<div class="center pick-teams">
+  <div class="row">
+    <br>
+    <br>
+
+    <div class="row">
+
+      <div class="choose-team">
+        <div class="select-red card-button col-sm-4">
+          <%= image_tag('cards/red_team.png', class: 'select-red')%>
+        </div>
+        <div class="card-choose col-sm-4">
+          <div class="front">
+            <%= image_tag('chess_logo_minimal.png')%>
+          </div>
+          <div class="back">
+            <%= image_tag('cards/choose.png')%>
+          </div>
+        </div>
+        <div class="select-blue card-button col-sm-4">
+          <%= image_tag('cards/blue_team.png', class: 'select-blue')%>
+        </div>
+        <div class=" them">
+          <div class="them-blue them-card">
+            <%= image_tag('cards/blue_them.png')%>
+          </div>
+          <div class="them-red them-card">
+            <%= image_tag('cards/red_them.png')%>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="selections row">
+      <div class="new col-sm-12">
+        <h2>
+          New Game
+        </h2>
+      </div>
+    </div>
   </div>
-  <br>
-  <%= link_to 'Pick Red', pick_red_path, class: "btn btn-lg btn-chess" %>
-  <%= link_to 'Pick Blue', pick_blue_path, class: "btn btn-lg btn-chess" %>
-</div>
 
 </div>

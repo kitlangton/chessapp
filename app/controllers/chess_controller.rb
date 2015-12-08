@@ -49,10 +49,7 @@ class ChessController < ApplicationController
 
     red_active, blue_active = stats.red_active?, stats.blue_active?
 
-    puts "HEY"
-    p stats
     game.save
-
 
     chess = game.state
     @new_dead = chess.new_dead
@@ -68,17 +65,27 @@ class ChessController < ApplicationController
     game = Game.find(params[:id])
     stats = game.stats
 
+    if @player == 'red'
+      stats.touch_red
+    else
+      stats.touch_blue
+    end
+
     red_active, blue_active = stats.red_active?, stats.blue_active?
 
     chess = game.state
     from , to = params[:move].values
     chess.move_piece(from, to)
+
     @new_dead = chess.new_dead
     @chess = game.state
+    turn = @chess.color_to_red_blue(@chess.turn)
+
     game.state = chess
     game.save
+
     respond_to do |format|
-      format.json { render json: { success: true, html: (render_to_string 'chess/_board.html.erb', layout: false), graveyard: (render_to_string 'chess/_graveyard.html.erb', layout: false) } }
+      format.json { render json: { success: true, red_active: red_active, blue_active: blue_active, status: @chess.status, turn: turn, html: (render_to_string 'chess/_board.html.erb', layout: false), graveyard: (render_to_string 'chess/_graveyard.html.erb', layout: false) } }
     end
   end
 end
