@@ -136,6 +136,10 @@ body {
   background-color: blue;
 }
 
+.click-me {
+  animation: float infinite 1s;
+}
+
 .possible_move {
   box-shadow: inset 0px 0px 40px rgba(255,255,255,1);
   &:hover {

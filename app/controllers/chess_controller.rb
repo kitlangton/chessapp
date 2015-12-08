@@ -77,6 +77,8 @@ class ChessController < ApplicationController
     game = Game.find(params[:id])
     stats = game.stats
 
+    @player = session[:team]
+
     if @player == 'red'
       stats.touch_red
     else

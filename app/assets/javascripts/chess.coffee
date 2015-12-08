@@ -116,56 +116,67 @@ $ ->
     offsetx = $('.card-choose').offset().left
     count = 0
 
+    $(".card-button").css
+      opacity: 0
     $(".choose-team").velocity 'transition.slideUpIn',
       delay: 300
+    setTimeout ->
+      $(".card-choose").addClass 'click-me'
+    ,
+      1200
 
-    $(".card-button").each ->
-      factors = ["-",""]
-      left = $(@).offset().left
-      $(@).css
-        left: "#{offsetx - left}px"
-      $(".front").velocity
-        rotateY: "180deg"
-      ,
-        easing: 'spring'
-        duration: 800
-        delay: 2000
-      $(".back").velocity
-        rotateY: "180deg"
-      ,
-        easing: 'spring'
-        duration: 800
-        delay: 2000
-      $(@).velocity
-        translateX: "#{(left - offsetx) / 4}px"
-        rotateZ: "#{factors[count]}10deg"
-      ,
-        delay: 800
-        duration: 700
-        easing: 'spring'
-      count += 1
-      $(@).velocity
-        translateX: "#{left - offsetx}px"
-        rotateZ: "0deg"
-      ,
-        delay: 500
-        duration: 800
-        easing: 'spring'
-      $('.card-button').addClass 'active-button'
+    $(".card-choose").on 'mouseenter', ->
+      $(@).removeClass 'click-me'
+      $(".card-choose").unbind 'mouseenter'
+      $(".card-choose").velocity 'callout.shake'
+      $(".card-button").each ->
+        factors = ["-",""]
+        left = $(@).offset().left
+        $(@).css
+          opacity: 1
+          left: "#{offsetx - left}px"
+        $(".front").velocity
+          rotateY: "180deg"
+        ,
+          easing: 'spring'
+          duration: 800
+          delay: 2000
+        $(".back").velocity
+          rotateY: "180deg"
+        ,
+          easing: 'spring'
+          duration: 800
+          delay: 2000
+        $(@).velocity
+          translateX: "#{(left - offsetx) / 4}px"
+          rotateZ: "#{factors[count]}10deg"
+        ,
+          delay: 800
+          duration: 700
+          easing: 'spring'
+        count += 1
+        $(@).velocity
+          translateX: "#{left - offsetx}px"
+          rotateZ: "0deg"
+        ,
+          delay: 500
+          duration: 800
+          easing: 'spring'
+        $('.card-button').addClass 'active-button'
 
-    $('.active-button > img').hover ->
-      $(@).velocity
-        scale: 1.05
-      ,
-        duration: 100
-    , ->
-      $(@).velocity
-        scale: 1
-      ,
-        duration: 400
+      $('.active-button > img').hover ->
+        $(@).velocity
+          scale: 1.05
+        ,
+          duration: 100
+      , ->
+        $(@).velocity
+          scale: 1
+        ,
+          duration: 400
 
 
-    $(".card-button").on 'click', 'img', ->
+    $(".card-button").on 'click touchstart', 'img', ->
       $('.card-button > img').unbind 'mouseenter mouseleave'
       $('.active-button').removeClass 'active-button'
       if $(@).hasClass 'select-red'
@@ -316,7 +327,7 @@ $ ->
 
   # $(".audio-play")[0].currentTime = 0
 
-  $('body').on 'click', 'td', ->
+  $('body').on 'click touchstart', 'td', ->
     unless piece_selected
       unless player == window.turn == $(@).data('color')
         return
