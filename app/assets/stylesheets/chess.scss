@@ -5,7 +5,8 @@
 $chess-color: #fc3232;
 
 body {
-  // perspective: 1000px;
+  perspective: 1000px;
+  transform: translateZ(0);
   background-color: $chess-color;
   color: black;
   transition: background-color 1s;
@@ -25,7 +26,10 @@ body {
   margin: 0 auto;
 }
 
+
 .logo {
+  transform: translateZ(-50);
+  z-index: 10;
   img {
     width: 300px;
     height: auto;
@@ -84,7 +88,7 @@ body {
     img {
       width: 70px;
       height: 70px;
-      transition: transform 0.3s;
+      transition: all 0.3s;
     }
   }
 }
@@ -141,12 +145,14 @@ body {
   animation: in-check infinite 1s;
 }
 
+
 @keyframes fade-in-dead {
   from {
     opacity: 0;
     transform: translateY(-15px);
   }
 }
+
 
 @keyframes in-check {
   50% {
@@ -169,3 +175,59 @@ body {
     transform: translateY(5px);
   }
 }
+
+@keyframes card-in {
+  0% {
+    z-index: -5;
+  }
+
+  50% {
+  }
+
+  100% {
+    z-index: 1;
+  }
+}
+
+.cards-container {
+  width: 100%;
+  height: 200px;
+}
+
+.cards {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.my-card {
+  z-index: -5;
+  transition: all 0.5s;
+  &:hover {
+    transform: translateY(10px);
+  }
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  transform: translateX(00px) translateY(00px) rotateZ(0deg);
+
+  img {
+    width: 100px;
+    height: auto;
+  }
+}
+
+.card-active {
+  opacity: 1;
+  transition: all 0.3s;
+}
+
+.inactive {
+  img {
+    opacity: 0.7;
+  }
+}
+
+
+

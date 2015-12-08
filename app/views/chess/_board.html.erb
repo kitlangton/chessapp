@@ -1,5 +1,5 @@
 <% king_check = @chess.king_in_check? %>
-<table id="board" data-turn="<%= "#{@chess.turn.to_s}" %>" data-player="<%= @player %>" data-check="<%= king_check %>" class="<%= @chess.status %>">
+<table id="board" data-turn="<%= "#{@chess.turn.to_s}" %>" data-player="<%= @player %>" data-check="<%= king_check %>" class="<%= @chess.status %>" data-game-id="<%= @id %>">
   <% @chess.rows_array.each_with_index do |row, i| %>
     <tr>
       <%row.each_with_index do |piece, j| %>

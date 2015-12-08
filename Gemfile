@@ -25,6 +25,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'rainbow'
 gem 'bootstrap', '~> 4.0.0.alpha1'
+gem 'hashids'
 
 gem 'unicorn'
 

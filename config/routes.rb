@@ -1,14 +1,14 @@
 Rails.application.routes.draw do
   root 'chess#index'
 
-  get 'chess/show', as: 'new_game', to: 'chess#show'
+  get 'chess/show/(:id)', as: 'new_game', to: 'chess#show'
 
   get 'chess/pick_red', as: 'pick_red', to: 'chess#pick_red'
   get 'chess/pick_blue', as: 'pick_blue', to: 'chess#pick_blue'
 
-  get 'chess/game_state', as: 'game_state', to: 'chess#game_state'
+  get 'chess/game_state/(:id)', as: 'game_state', to: 'chess#game_state'
 
-  post 'chess/move', as: 'move', to: 'chess#move'
+  post 'chess/move/(:id)', as: 'move', to: 'chess#move'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

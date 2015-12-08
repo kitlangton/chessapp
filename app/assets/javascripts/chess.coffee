@@ -36,8 +36,38 @@ checkmated = ->
 update_state = (player) ->
   $.ajax
     type: "GET"
-    url: "/chess/game_state"
+    url: "/chess/game_state/#{window.id}"
     success: (data) ->
+      check = $("#board").data('check')
+      if check
+        $(".my-card.#{check}-check-card").addClass('card-active')
+      else
+        $(".my-card.red-check-card").removeClass('card-active')
+        $(".my-card.blue-check-card").removeClass('card-active')
+      if data.red_active
+        $(".red-team.inactive").removeClass('inactive')
+        $(".my-card.red-idle-card").removeClass('card-active')
+      else
+        $(".red-team").addClass('inactive')
+        $(".my-card.red-idle-card").addClass('card-active')
+      if data.blue_active
+        $(".blue-team.inactive").removeClass('inactive')
+        $(".my-card.blue-idle-card").removeClass('card-active')
+      else
+        $(".blue-team").addClass('inactive')
+        $(".my-card.blue-idle-card").addClass('card-active')
+      count = -2
+      $('.card-active').each ->
+        count += 1
+        $(@).velocity
+          opacity: 1
+          translateX: "#{80 * count}px"
+          rotateZ: "#{10 * count}deg"
+      if count > -2
+        count += 1
+        $('.logo').velocity
+          translateX: "#{80 * count}px"
+          rotateZ: "#{10 * count}deg"
       if data.status == 'checkmate'
         checkmated()
       unless !window.updated && data.turn == player
@@ -72,6 +102,35 @@ update_state = (player) ->
 
 
 $ ->
+  $('.cards-container').hover ->
+    count = -2
+    $('.cards').find('.card-active').each ->
+      count += 1
+      $(@).velocity
+        opacity: 1
+        translateX: "#{110 * count}px"
+        rotateZ: "#{0 * count}deg"
+      ,
+        200
+    if count > -2
+      count += 1
+      $('.logo').velocity
+        translateX: "#{110 * count}px"
+        rotateZ: "#{0 * count}deg"
+  , ->
+    count = -2
+    $('.cards').find('.card-active').each ->
+      count += 1
+      $(@).velocity
+        opacity: 1
+        translateX: "#{80 * count}px"
+        rotateZ: "#{10 * count}deg"
+    if count > -2
+      count += 1
+      $('.logo').velocity
+        translateX: "#{80 * count}px"
+        rotateZ: "#{10 * count}deg"
+
   unless $('#board').hasClass('checkmate')
     $(".piece").css
       opacity: 0
@@ -91,6 +150,7 @@ $ ->
     ,
       1500
 
+  window.id = $('#board').data('game-id')
   window.turn = $("#board").data('turn')
   if window.turn == "top"
     window.turn = "blue"
@@ -103,6 +163,9 @@ $ ->
   player = $("#board").data('player')
   window.updated = window.turn == player
   update_state(player)
+
+  # alert player
+  $(".#{player}-team-card").addClass('card-active')
 
   piece_selected = false
   piece = null
@@ -150,7 +213,7 @@ $ ->
       setTimeout ->
         $.ajax
           type: "POST"
-          url: "/chess/move"
+          url: "/chess/move/#{window.id}"
           data:
             move:
               from: $('#move_from').val()

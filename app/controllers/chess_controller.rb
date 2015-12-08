@@ -1,4 +1,5 @@
 class ChessController < ApplicationController
+  require 'stats'
   require 'chess'
 
   def index
@@ -6,30 +7,52 @@ class ChessController < ApplicationController
 
   def pick_red
     session[:team] = 'red'
-    redirect_to new_game_url
+    hash = Game.create(state: Chess.new, stats: Stats.new)
+    redirect_to new_game_url(id: hash)
   end
 
   def pick_blue
     session[:team] = 'blue'
-    redirect_to new_game_url
+    hash = Game.create(state: Chess.new, stats: Stats.new)
+    redirect_to new_game_path(id: hash)
   end
 
+  def new
+  end
 
   def show
 
-    game = Game.last
+    id = Hashids.new("checkmate", 8).decode(params[:id]).try(:first)
+    game = Game.find(id)
 
     @player = session[:team]
+    @id = id
 
     # reset
-    game.state = Chess.new
-    game.save
+    # game.state = Chess.new
+    # game.save
 
     @chess = game.state
   end
 
   def game_state
-    game = Game.last
+    game = Game.find(params[:id])
+    stats = game.stats
+    @player = session[:team]
+
+    if @player == 'red'
+      stats.touch_red
+    else
+      stats.touch_blue
+    end
+
+
+    red_active, blue_active = stats.red_active?, stats.blue_active?
+
+    puts "HEY"
+    p stats
+    game.save
+
 
     chess = game.state
     @new_dead = chess.new_dead
@@ -37,12 +60,15 @@ class ChessController < ApplicationController
     turn = @chess.color_to_red_blue(@chess.turn)
 
     respond_to do |format|
-      format.json { render json: { success: true, status: @chess.status, turn: turn, html: (render_to_string 'chess/_board.html.erb', layout: false), graveyard: (render_to_string 'chess/_graveyard.html.erb', layout: false) } }
+      format.json { render json: { success: true, red_active: red_active, blue_active: blue_active, status: @chess.status, turn: turn, html: (render_to_string 'chess/_board.html.erb', layout: false), graveyard: (render_to_string 'chess/_graveyard.html.erb', layout: false) } }
     end
   end
 
   def move
-    game = Game.last
+    game = Game.find(params[:id])
+    stats = game.stats
+
+    red_active, blue_active = stats.red_active?, stats.blue_active?
 
     chess = game.state
     from , to = params[:move].values
