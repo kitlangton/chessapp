@@ -26,6 +26,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'rainbow'
 gem 'bootstrap', '~> 4.0.0.alpha1'
 gem 'hashids'
+gem 'clipboard-rails'
+
 
 gem 'unicorn'
 

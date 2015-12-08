@@ -105,8 +105,14 @@ update_state = (player) ->
 
 
 $ ->
+  clipboard = new Clipboard('.clipboard')
 
   if $('.pick-teams').size() > 0
+
+    clipboard.on 'error', ->
+      $("#link-field").velocity 'transition.slideDownIn'
+      $('.link-card > img').unbind 'mouseenter mouseleave'
+
     offsetx = $('.card-choose').offset().left
     count = 0
 
@@ -147,7 +153,7 @@ $ ->
         easing: 'spring'
       $('.card-button').addClass 'active-button'
 
-    $('.active-button').find('img').hover ->
+    $('.active-button > img').hover ->
       $(@).velocity
         scale: 1.05
       ,
@@ -160,8 +166,10 @@ $ ->
 
 
     $(".card-button").on 'click', 'img', ->
+      $('.card-button > img').unbind 'mouseenter mouseleave'
       $('.active-button').removeClass 'active-button'
       if $(@).hasClass 'select-red'
+        chosen = 'red'
         $('.them-blue').velocity
           opacity: 1
           translateY: "160px"
@@ -171,6 +179,7 @@ $ ->
           easing: 'spring'
         $('body').addClass 'red'
       else if $(@).hasClass 'select-blue'
+        chosen = 'blue'
         $('.them-red').velocity
           translateY: "160px"
           opacity: 1
@@ -179,6 +188,11 @@ $ ->
           duration: 800
           easing: 'spring'
         $('body').addClass 'blue'
+      $.ajax
+        type: 'GET'
+        url: "/chess/pick_#{chosen}"
+        success: (data) ->
+          $('#link-field').val data.link
       $(@).parent(".card-button").addClass 'selected-team'
       $(".front").velocity
         rotateY: "0deg"
@@ -211,6 +225,23 @@ $ ->
           opacity: 0
       ,
         600
+      $('.link-card').velocity
+        opacity: 1
+        translateY: '160px'
+      ,
+        delay: 1000
+        duration: 800
+        easing: 'spring'
+      $('.link-card > img').hover ->
+        $(@).velocity
+          scale: 1.05
+        ,
+          duration: 100
+      , ->
+        $(@).velocity
+          scale: 1
+        ,
+          duration: 400
 
   if $("#board").size() > 0
     $('body').addClass 'red'

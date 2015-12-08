@@ -35,8 +35,15 @@ body {
   position: absolute;
 }
 
-.selections {
+.link-card {
   opacity: 0;
+  z-index: -5;
+  position: relative;
+  bottom: 15px;
+}
+
+.selections {
+  // opacity: 0;
   margin-top: 30px;
   img {
     width: 100px;
@@ -300,7 +307,7 @@ body {
 .active-button {
   cursor: pointer;
   img {
-    transition: all 0.5s;
+    transition: all 0.3s;
   }
   &:hover {
     &.select-blue {
@@ -316,6 +323,33 @@ body {
   }
 }
 
+.link-container {
+  position: relative;
+  top: 160px;
+  z-index: -40;
+  margin: 0 auto;
+  text-align: center;
+}
 
+#link-field {
+  opacity: 0;
+  z-index: -40;
+  width: 100%;
+  color: white;
+  background: transparent;
+  font-size: 1.2em;
+  margin: 0 auto;
+  text-align: center;
+  font-weight: bold;
+  border: none;
+  outline: none;
+}
 
-
+.link-card {
+  z-index: 0;
+  img{
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

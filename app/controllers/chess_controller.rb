@@ -7,23 +7,30 @@ class ChessController < ApplicationController
 
   def pick_red
     session[:team] = 'red'
-    hash = Game.create(state: Chess.new, stats: Stats.new).to_param
-    redirect_to new_game_url(id: hash)
+    hash = Game.create(state: Chess.new, stats: Stats.new(creator: 'red')).to_param
+    respond_to do |format|
+      format.json { render json: { success: true, link: new_game_url(id: hash)} }
+    end
   end
 
   def pick_blue
     session[:team] = 'blue'
-    hash = Game.create(state: Chess.new, stats: Stats.new).to_param
-    redirect_to new_game_path(id: hash)
+    hash = Game.create(state: Chess.new, stats: Stats.new(creator: 'blue')).to_param
+    respond_to do |format|
+      format.json { render json: { success: true, link: new_game_url(id: hash)} }
+    end
   end
 
   def new
   end
 
   def show
-
     id = Hashids.new("checkmate", 8).decode(params[:id]).try(:first)
     game = Game.find(id)
+
+    unless session[:team]
+      session[:team] = stats.other_team
+    end
 
     @player = session[:team]
     @id = id
@@ -38,6 +45,11 @@ class ChessController < ApplicationController
   def game_state
     game = Game.find(params[:id])
     stats = game.stats
+
+    unless session[:team]
+      session[:team] = stats.other_team
+    end
+
     @player = session[:team]
 
     if @player == 'red'

@@ -14,4 +14,5 @@
 //= require jquery_ujs
 //= require velocity.min
 //= require velocity.ui.min
+//= require clipboard
 //= require_tree .
