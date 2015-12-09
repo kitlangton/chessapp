@@ -58,7 +58,7 @@ updateCards = (data) ->
     count += 1
     $(@).css
       opacity: 1
-    $(@).velocity
+    $(@).stop().velocity
       translateX: "#{80 * count}px"
       rotateZ: "#{10 * count}deg"
     ,
@@ -66,7 +66,7 @@ updateCards = (data) ->
       easing: 'spring'
   if count > -2
     count += 1
-    $('.logo').velocity
+    $('.logo').stop().velocity
       translateX: "#{80 * count}px"
       rotateZ: "#{10 * count}deg"
     ,
@@ -102,6 +102,7 @@ update_state = (player) ->
       $(".piece.#{data.turn}-team").velocity 'callout.bounce',
         stagger: 50
         drag: true
+      updateCards(data)
       setTimeout ->
         update_state(player)
       ,
@@ -422,7 +423,6 @@ $ ->
               from: $('#move_from').val()
               to: $('#move_to').val()
           success: (data) ->
-            updateCards(data)
             window.updated = false
             $('.board-container').html data.html
             $('.graveyard-container').html data.graveyard
@@ -436,6 +436,7 @@ $ ->
             $(".piece.#{window.turn}-team").velocity 'callout.bounce',
               stagger: 50
               drag: true
+            updateCards(data)
             return false
           error: (data) ->
             console.log data

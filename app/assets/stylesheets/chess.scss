@@ -196,6 +196,8 @@ body {
 
 .ghost {
   position: absolute;
+  text-align: center;
+  margin: 0 auto;
   top: -10px;
   img {
     opacity: 0;
@@ -204,7 +206,13 @@ body {
   animation: float 1s infinite;
 }
 
+img {
+  outline: 1px solid transparent;
+}
+
 .stone {
+  margin: 0 auto;
+  text-align: center;
   margin-bottom: 10px;
   &:hover {
     .ghost {
@@ -377,5 +385,16 @@ body {
     &:hover {
       cursor: pointer;
     }
+  }
+}
+
+.row.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+
+  & > [class^="col-"],
+  & > [class*=" col-"] {
+    padding-right: 0;
+    padding-left: 0;
   }
 }

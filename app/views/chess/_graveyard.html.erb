@@ -1,12 +1,32 @@
 <div class="graveyard">
-<div class="row">
-  <% @chess.graveyard.each do |dead| %>
-    <div class="col-sm-2 stone <%= "new-dead" if @new_dead && @new_dead.any? { |x| x == dead} %>">
-      <% color = dead.top? ? "blue" : "red" %>
-      <%= image_tag "#{color}_grave.png" %>
-      <div class="ghost">
-        <%= image_tag "#{color}_#{dead.class.to_s.downcase}.png" %>
+<div class="row no-gutters">
+  <% @chess.graveyard.each_slice(3) do |dead, dead2, dead3| %>
+    <div class="col-xs-2">
+      <div class="col-xs-4 stone <%= "new-dead" if @new_dead && @new_dead.any? { |x| x == dead} %>">
+        <% color = dead.top? ? "blue" : "red" %>
+        <%= image_tag "#{color}_grave.png" %>
+        <div class="ghost">
+          <%= image_tag "#{color}_#{dead.class.to_s.downcase}.png" %>
+        </div>
       </div>
+      <% if dead2 %>
+        <div class="col-xs-4 stone <%= "new-dead" if @new_dead && @new_dead.any? { |x| x == dead2} %>">
+          <% color = dead2.top? ? "blue" : "red" %>
+          <%= image_tag "#{color}_grave.png" %>
+          <div class="ghost">
+            <%= image_tag "#{color}_#{dead2.class.to_s.downcase}.png" %>
+          </div>
+        </div>
+      <% end %>
+      <% if dead3 %>
+        <div class="col-xs-4 stone <%= "new-dead" if @new_dead && @new_dead.any? { |x| x == dead3} %>">
+          <% color = dead3.top? ? "blue" : "red" %>
+          <%= image_tag "#{color}_grave.png" %>
+          <div class="ghost">
+            <%= image_tag "#{color}_#{dead3.class.to_s.downcase}.png" %>
+          </div>
+        </div>
+      <% end %>
     </div>
   <% end %>
 </div>
