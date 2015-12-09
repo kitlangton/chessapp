@@ -154,15 +154,33 @@ copySuccess = ->
       window.location.href = link
     ,
       2000
+  $('.copy-instructions').velocity
+    opacity: 0
+  ,
+    delay: 400
+    duration: 800
   $("#link-field").velocity
     opacity: 0
-    translateY: '10px'
+  ,
+    delay: 400
+    duration: 800
+  $('.begin-card > img').hover ->
+    $(@).stop().velocity
+      scale: 1.05
+    ,
+      duration: 100
+  , ->
+    $(@).stop().velocity
+      scale: 1
+    ,
+      duration: 200
 
 $ ->
 
 
 
   if $('.pick-teams').size() > 0
+
 
 
     offsetx = $('.card-choose').offset().left
@@ -226,12 +244,30 @@ $ ->
 
 
     $(".card-button").on 'click touchstart', 'img', ->
+      $('.link-card').removeClass 'violated'
+      setTimeout ->
+        unless $('.link-card').hasClass 'violated'
+          $('.link-card > img').stop().velocity
+            opacity: 0.5
+          ,
+            loop: 2
+            duration: 300
+      ,
+        2500
+
       $('#link-field').on 'copy', copySuccess
       clipboard = new Clipboard('.clipboard')
       $('.clipboard').addClass 'clickboard'
       clipboard.on 'success', ->
         copySuccess()
       clipboard.on 'error', ->
+        $('.link-card > img').stop().velocity
+          scale: 1
+        ,
+          duration: 400
+        $('.copy-instructions').velocity 'transition.slideDownIn'
+        ,
+          delay: 300
         $("#link-field").velocity 'transition.slideDownIn'
         $('.link-card > img').unbind 'mouseenter mouseleave'
       $('.card-button > img').unbind 'mouseenter mouseleave'
@@ -301,6 +337,7 @@ $ ->
         duration: 800
         easing: 'spring'
       $('.link-card > img').hover ->
+        $('.link-card').addClass 'violated'
         $(@).stop().velocity
           scale: 1.05
         ,
@@ -361,12 +398,12 @@ $ ->
     $(".stone").css
       opacity: 0
     $('#board').velocity "transition.slideUpIn"
-    setTimeout ->
-      $(".piece").velocity 'transition.slideDownIn',
-        stagger: 50
-        drag: true
-    ,
-      500
+    # setTimeout ->
+    #   $(".piece").velocity 'transition.slideDownIn',
+    #     stagger: 50
+    #     drag: true
+    # ,
+    #   500
     setTimeout ->
       $(".stone").velocity 'transition.slideDownIn',
         stagger: 50
@@ -388,6 +425,26 @@ $ ->
   window.updated = window.turn == player
 
   data = {red_active: true, blue_active: true, player: 'red'}
+
+  $('td').css
+    opacity: 0
+
+  time = 1
+
+  setTimeout ->
+    $('td').each ->
+      setTimeout =>
+        $(@).velocity
+          opacity: 1
+      ,
+        time
+      time += 20
+    $(".piece").velocity 'transition.slideDownIn',
+      delay: 400
+      stagger: 50
+      drag: true
+  ,
+    500
 
   setTimeout ->
     update_state(player)
