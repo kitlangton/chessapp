@@ -66,6 +66,24 @@ body {
   }
 }
 
+.begin-card2 > img {
+  opacity: 0;
+  width: 100px;
+  height: auto;
+  position: relative;
+  top: -173px;
+  z-index: -10;
+}
+
+.begin-card > img {
+  opacity: 0;
+  width: 100px;
+  height: auto;
+  position: relative;
+  top: -28px;
+  z-index: -10;
+}
+
 .card-choose {
   z-index: 5;
   background-color: transparent;
@@ -321,6 +339,21 @@ img {
     opacity: 0.7;
   }
 }
+
+.begin-active {
+  position: relative;
+  z-index: 100;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+
+// .begin-card > img {
+//   cursor: pointer;
+//   z-index: 100;
+// }
 
 .active-button {
   cursor: pointer;

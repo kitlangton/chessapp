@@ -114,6 +114,7 @@ update_state = (player) ->
 
 
 copySuccess = ->
+  $('.clipboard').removeClass 'clipboard'
   $('.copied-back > img').css
     opacity: 1
   $('.link-card img').velocity
@@ -121,6 +122,41 @@ copySuccess = ->
   ,
     duration: 1000
     easing: 'spring'
+  $('.begin-card > img').css
+    opacity: 1
+  $('.begin-card2 > img').css
+    opacity: 1
+  $('.begin-card2 > img').velocity
+    translateX: "-120px"
+  ,
+    duration: 1000
+    easing: 'spring'
+  $('.begin-card > img').velocity
+    translateX: "120px"
+  ,
+    duration: 1000
+    easing: 'spring'
+  $('.begin-card > img').velocity
+    translateY: "-10px"
+  ,
+    delay: 500
+    duration: 1000
+    easing: 'spring'
+  link = $('#link-field').val()
+  $('.begin-card').addClass 'begin-active'
+  $('.begin-card > img ').addClass 'pointer'
+  $('.begin-card > img').click ->
+    $(@).unbind 'click'
+    $('img').stop().velocity 'transition.slideUpOut' ,
+      drag: true,
+      stagger: 30
+    setTimeout ->
+      window.location.href = link
+    ,
+      2000
+  $("#link-field").velocity
+    opacity: 0
+    translateY: '10px'
 
 $ ->
 
@@ -178,15 +214,15 @@ $ ->
         $('.card-button').addClass 'active-button'
 
       $('.active-button > img').hover ->
-        $(@).velocity
+        $(@).stop().velocity
           scale: 1.05
         ,
           duration: 100
       , ->
-        $(@).velocity
+        $(@).stop().velocity
           scale: 1
         ,
-          duration: 400
+          duration: 200
 
 
     $(".card-button").on 'click touchstart', 'img', ->
@@ -265,12 +301,12 @@ $ ->
         duration: 800
         easing: 'spring'
       $('.link-card > img').hover ->
-        $(@).velocity
+        $(@).stop().velocity
           scale: 1.05
         ,
           duration: 100
       , ->
-        $(@).velocity
+        $(@).stop().velocity
           scale: 1
         ,
           duration: 400
