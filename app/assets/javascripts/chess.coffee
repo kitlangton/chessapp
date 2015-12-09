@@ -34,6 +34,7 @@ checkmated = ->
     backgroundColor: "#000"
 
 updateCards = (data) ->
+  return if $(".hovering").size() > 0
   check = $("#board").data('check')
   if check
     $(".my-card.#{check}-check-card").addClass('card-active')
@@ -55,15 +56,22 @@ updateCards = (data) ->
   count = -2
   $('.card-active').each ->
     count += 1
-    $(@).velocity
+    $(@).css
       opacity: 1
+    $(@).velocity
       translateX: "#{80 * count}px"
       rotateZ: "#{10 * count}deg"
+    ,
+      duration: 800
+      easing: 'spring'
   if count > -2
     count += 1
     $('.logo').velocity
       translateX: "#{80 * count}px"
       rotateZ: "#{10 * count}deg"
+    ,
+      duration: 800
+      easing: 'spring'
   if data.status == 'checkmate'
     checkmated()
 
@@ -104,14 +112,21 @@ update_state = (player) ->
       return false
 
 
+copySuccess = ->
+  $('.copied-back > img').css
+    opacity: 1
+  $('.link-card img').velocity
+    rotateY: '180deg'
+  ,
+    duration: 1000
+    easing: 'spring'
+
 $ ->
-  clipboard = new Clipboard('.clipboard')
+
+
 
   if $('.pick-teams').size() > 0
 
-    clipboard.on 'error', ->
-      $("#link-field").velocity 'transition.slideDownIn'
-      $('.link-card > img').unbind 'mouseenter mouseleave'
 
     offsetx = $('.card-choose').offset().left
     count = 0
@@ -120,12 +135,9 @@ $ ->
       opacity: 0
     $(".choose-team").velocity 'transition.slideUpIn',
       delay: 300
-    setTimeout ->
-      $(".card-choose").addClass 'click-me'
-    ,
-      1200
+    $(".card-choose").addClass 'click-me'
 
-    $(".card-choose").on 'mouseenter', ->
+    $(".click-me").on 'mouseenter', ->
       $(@).removeClass 'click-me'
       $(".card-choose").unbind 'mouseenter'
       $(".card-choose").velocity 'callout.shake'
@@ -177,6 +189,14 @@ $ ->
 
 
     $(".card-button").on 'click touchstart', 'img', ->
+      $('#link-field').on 'copy', copySuccess
+      clipboard = new Clipboard('.clipboard')
+      $('.clipboard').addClass 'clickboard'
+      clipboard.on 'success', ->
+        copySuccess()
+      clipboard.on 'error', ->
+        $("#link-field").velocity 'transition.slideDownIn'
+        $('.link-card > img').unbind 'mouseenter mouseleave'
       $('.card-button > img').unbind 'mouseenter mouseleave'
       $('.active-button').removeClass 'active-button'
       if $(@).hasClass 'select-red'
@@ -258,33 +278,45 @@ $ ->
     $('body').addClass 'red'
 
   $('.cards-container').hover ->
+    $(@).addClass 'hovering'
     count = -2
     $('.cards').find('.card-active').each ->
       count += 1
-      $(@).velocity
+      $(@).stop().velocity
         opacity: 1
         translateX: "#{110 * count}px"
         rotateZ: "#{0 * count}deg"
       ,
-        200
+        duration: 800
+        easing: "spring"
     if count > -2
       count += 1
-      $('.logo').velocity
+      $('.logo').stop().velocity
         translateX: "#{110 * count}px"
         rotateZ: "#{0 * count}deg"
+      ,
+        duration: 800
+        easing: "spring"
   , ->
+    $(@).removeClass 'hovering'
     count = -2
     $('.cards').find('.card-active').each ->
       count += 1
-      $(@).velocity
+      $(@).stop().velocity
         opacity: 1
         translateX: "#{80 * count}px"
         rotateZ: "#{10 * count}deg"
+      ,
+        duration: 800
+        easing: "spring"
     if count > -2
       count += 1
-      $('.logo').velocity
+      $('.logo').stop().velocity
         translateX: "#{80 * count}px"
         rotateZ: "#{10 * count}deg"
+      ,
+        duration: 800
+        easing: "spring"
 
   unless $('#board').hasClass('checkmate')
     $(".piece").css
@@ -317,10 +349,26 @@ $ ->
 
   player = $("#board").data('player')
   window.updated = window.turn == player
-  update_state(player)
+
+  data = {red_active: true, blue_active: true, player: 'red'}
+
+  setTimeout ->
+    update_state(player)
+  ,
+    5000
 
   # alert player
   $(".#{player}-team-card").addClass('card-active')
+
+  setTimeout ->
+    updateCards(data)
+  ,
+    2000
+
+  $('.cards-container').css
+    opacity: 0
+  $('.cards-container').velocity 'transition.slideUpIn',
+    delay: 1000
 
   piece_selected = false
   piece = null

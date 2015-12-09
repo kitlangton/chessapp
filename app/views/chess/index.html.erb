@@ -35,11 +35,14 @@
 
     <div class="selections row">
       <div class="new link-card col-sm-12 clipboard" data-clipboard-target="#link-field">
-        <%= image_tag('cards/link.png')%>
+        <%= image_tag('cards/link.png', class: 'link-card-img')%>
+        <div class="copied-back">
+          <%= image_tag('cards/copied.png')%>
+        </div>
       </div>
     </div>
     <div class="link-container">
-      <input id="link-field" value="Link Text">
+      <input id="link-field" value="Link Text" readonly="readonly">
     </div>
   </div>
 
