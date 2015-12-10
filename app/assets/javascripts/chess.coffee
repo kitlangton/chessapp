@@ -139,17 +139,27 @@ copySuccess = ->
   $('.begin-card > img').velocity
     translateY: "-10px"
   ,
-    delay: 500
+    delay: 1000
     duration: 1000
     easing: 'spring'
   link = $('#link-field').val()
   $('.begin-card').addClass 'begin-active'
   $('.begin-card > img ').addClass 'pointer'
   $('.begin-card > img').click ->
-    $(@).unbind 'click'
-    $('img').stop().velocity 'transition.slideUpOut' ,
-      drag: true,
-      stagger: 30
+    $(@).removeClass 'pointer'
+    $(@).unbind 'click mouseenter mouseleave'
+    time = 0
+    $('img').stop().each ->
+      setTimeout =>
+        $(@).velocity
+          translateY: "-30px"
+          opacity: 0.001
+        ,
+          duration: 1200
+          easing: 'ease'
+      ,
+        time
+      time += 40
     setTimeout ->
       window.location.href = link
     ,
@@ -504,6 +514,8 @@ $ ->
       $(piece).velocity
         translateX: "#{xdist}px",
         translateY: "#{ydist}px" 
+      ,
+        easing: [0.175, 0.885, 0.32, 1.175]
       $(".audio-play")[0].play()
       $('#move_to').val $(@).data('coord')
 
