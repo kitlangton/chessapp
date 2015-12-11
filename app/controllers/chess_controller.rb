@@ -6,18 +6,18 @@ class ChessController < ApplicationController
   end
 
   def pick_red
-    session[:team] = 'red'
     hash = Game.create(state: Chess.new, stats: Stats.new(creator: 'red')).to_param
+    cookies[hash.to_sym] ||= {value: 'red', expires: 1.year.from_now.utc}
     respond_to do |format|
-      format.json { render json: { success: true, link: new_game_url(id: hash, team: 'red'), sharelink: new_game_url(id: hash, team: 'blue')} }
+      format.json { render json: { success: true, link: new_game_url(id: hash), sharelink: new_game_url(id: hash)} }
     end
   end
 
   def pick_blue
-    session[:team] = 'blue'
     hash = Game.create(state: Chess.new, stats: Stats.new(creator: 'blue')).to_param
+    cookies[hash.to_sym] ||= {value: 'blue', expires: 1.year.from_now.utc}
     respond_to do |format|
-      format.json { render json: { success: true, link: new_game_url(id: hash, team: 'blue'), sharelink: new_game_url(id: hash, team: 'red')} }
+      format.json { render json: { success: true, link: new_game_url(id: hash), sharelink: new_game_url(id: hash)} }
     end
   end
 
@@ -28,16 +28,12 @@ class ChessController < ApplicationController
     id = Hashids.new("checkmate", 8).decode(params[:id]).try(:first)
     game = Game.find(id)
     stats = game.stats
+    hash = game.to_param
 
-    session[:team] = params[:team]
+    cookies[hash.to_sym] ||= {value: stats.other_team, expires: 1.year.from_now.utc}
 
-    unless session[:team]
-      session[:team] = 'spectator'
-    end
-
-
-    @link = new_game_url(game, team: 'blue')
-    @player = session[:team]
+    @link = new_game_url(game)
+    @player = cookies[hash.to_sym]
     @id = id
 
     # reset
@@ -49,13 +45,11 @@ class ChessController < ApplicationController
 
   def game_state
     game = Game.find(params[:id])
+    hash = game.to_param
     stats = game.stats
 
-    unless session[:team]
-      session[:team] = stats.other_team
-    end
-
-    @player = session[:team]
+    cookies[hash.to_sym] ||= {value: stats.other_team, expires: 1.year.from_now.utc}
+    @player = cookies[hash.to_sym]
 
     if @player == 'red'
       stats.touch_red
@@ -80,8 +74,10 @@ class ChessController < ApplicationController
   def move
     game = Game.find(params[:id])
     stats = game.stats
+    hash = game.to_param
 
-    @player = session[:team]
+    cookies[hash.to_sym] ||= {value: stats.other_team, expires: 1.year.from_now.utc}
+    @player = cookies[hash.to_sym]
 
     if @player == 'red'
       stats.touch_red

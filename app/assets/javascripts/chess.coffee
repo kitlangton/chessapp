@@ -515,10 +515,11 @@ $ ->
   ,
     500
 
-  setTimeout ->
-    update_state(player)
-  ,
-    5000
+  if $('#board').size() > 0
+    setTimeout ->
+      update_state(player)
+    ,
+      5000
 
   # alert player
   $(".#{player}-team-card").addClass('card-active')

@@ -10,13 +10,13 @@ class Stats
     @blue_active = input.fetch(:blue_active, Time.now)
   end
 
-  # def other_team
-  #   if creator == 'red'
-  #     'blue'
-  #   else
-  #     'red'
-  #   end
-  # end
+  def other_team
+    if creator == 'red'
+      'blue'
+    else
+      'red'
+    end
+  end
 
   def blue_active?
     @blue_active > 10.seconds.ago
