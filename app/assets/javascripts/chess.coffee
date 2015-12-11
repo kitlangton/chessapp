@@ -216,24 +216,24 @@ $ ->
       $(@).removeClass 'click-me'
       $(".card-choose").unbind 'mouseenter'
       $(".card-choose").velocity 'callout.shake'
+      $(".front").velocity
+        rotateY: "180deg"
+      ,
+        easing: 'spring'
+        duration: 800
+        delay: 2000
+      $(".snack").velocity
+        rotateY: "180deg"
+      ,
+        easing: 'spring'
+        duration: 800
+        delay: 2000
       $(".card-button").each ->
         factors = ["-",""]
         left = $(@).offset().left
         $(@).css
           opacity: 1
           left: "#{offsetx - left}px"
-        $(".front").velocity
-          rotateY: "180deg"
-        ,
-          easing: 'spring'
-          duration: 800
-          delay: 2000
-        $(".back").velocity
-          rotateY: "180deg"
-        ,
-          easing: 'spring'
-          duration: 800
-          delay: 2000
         $(@).velocity
           translateX: "#{(left - offsetx) / 4}px"
           rotateZ: "#{factors[count]}10deg"
@@ -386,7 +386,7 @@ $ ->
     $('#invite-modal').removeClass 'active-modal'
     $('.invite-box').velocity
       opacity: 0
-      translateY: '30px'
+      translateY: '-30px'
 
   $('.cards-container').hover ->
     if $('.idle-card').hasClass 'card-active'

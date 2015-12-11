@@ -96,7 +96,7 @@ body {
     width: 100px;
     height: auto;
   }
-  .back {
+  .snack {
     z-index: -5;
     position: absolute;
     left: 0;
@@ -183,8 +183,8 @@ body {
   position: fixed;
   top: -100px;
   bottom: -100px;
-  right: -50px;
-  left: -50px;
+  right: 0;
+  left: 0;
   z-index: 9999;
   background: rgba(black, 0.4);
   transition: opacity 0.5s;
