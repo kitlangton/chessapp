@@ -33,31 +33,14 @@ checkmated = ->
   $('body').velocity
     backgroundColor: "#000"
 
-updateCards = (data) ->
-  return if $(".hovering").size() > 0
-  check = $("#board").data('check')
-  if check
-    $(".my-card.#{check}-check-card").addClass('card-active')
-  else
-    $(".my-card.red-check-card").removeClass('card-active')
-    $(".my-card.blue-check-card").removeClass('card-active')
-  if data.red_active
-    $(".red-team.inactive").removeClass('inactive')
-    $(".my-card.red-idle-card").removeClass('card-active')
-  else
-    $(".red-team").addClass('inactive')
-    $(".my-card.red-idle-card").addClass('card-active')
-  if data.blue_active
-    $(".blue-team.inactive").removeClass('inactive')
-    $(".my-card.blue-idle-card").removeClass('card-active')
-  else
-    $(".blue-team").addClass('inactive')
-    $(".my-card.blue-idle-card").addClass('card-active')
+animateCards = ->
   count = -2
+  # $('.my-card:not(.card-active)').velocity
+  #   opacity: 0
   $('.card-active').each ->
     count += 1
-    $(@).css
-      opacity: 1
+    # $(@).css
+    #   opacity: 1
     $(@).stop().velocity
       translateX: "#{80 * count}px"
       rotateZ: "#{10 * count}deg"
@@ -72,6 +55,36 @@ updateCards = (data) ->
     ,
       duration: 800
       easing: 'spring'
+
+updateCards = (data) ->
+  return if $(".hovering").size() > 0
+  check = $("#board").data('check')
+  if check
+    $(".my-card.#{check}-check-card").addClass('card-active')
+  else
+    $(".my-card.red-check-card").removeClass('card-active')
+    $(".my-card.blue-check-card").removeClass('card-active')
+  if data.red_active
+    $(".red-team.inactive").removeClass('inactive')
+    $(".my-card.red-idle-card").removeClass('card-active')
+    # $(".my-card.red-idle-card > .back").removeClass('card-active')
+  else
+    $(".red-team").addClass('inactive')
+    $(".my-card.red-idle-card").addClass('card-active')
+    # $(".my-card.red-idle-card > .back").addClass('card-active')
+  if data.blue_active
+    $(".blue-team.inactive").removeClass('inactive')
+    $(".my-card.blue-idle-card").removeClass('card-active')
+    # $(".my-card.blue-idle-card > .back").removeClass('card-active')
+  else
+    $(".blue-team").addClass('inactive')
+    $(".my-card.blue-idle-card").addClass('card-active')
+    # $(".my-card.blue-idle-card > .back").addClass('card-active')
+  if data.turn == 'red'
+    $(".blue-turn-card").removeClass('card-active')
+  if data.turn == 'blue'
+    $(".red-turn-card").removeClass('card-active')
+  animateCards()
   if data.status == 'checkmate'
     checkmated()
 
@@ -142,7 +155,7 @@ copySuccess = ->
     delay: 1000
     duration: 1000
     easing: 'spring'
-  link = $('#link-field').val()
+  link = $('#begin-field').val()
   $('.begin-card').addClass 'begin-active'
   $('.begin-card > img ').addClass 'pointer'
   $('.begin-card > img').click ->
@@ -166,13 +179,15 @@ copySuccess = ->
       2000
   $('.copy-instructions').velocity
     opacity: 0
+    translateY: '20px'
   ,
-    delay: 400
+    delay: 500
     duration: 800
   $("#link-field").velocity
     opacity: 0
+    translateY: '20px'
   ,
-    delay: 400
+    delay: 500
     duration: 800
   $('.begin-card > img').hover ->
     $(@).stop().velocity
@@ -187,12 +202,7 @@ copySuccess = ->
 
 $ ->
 
-
-
   if $('.pick-teams').size() > 0
-
-
-
     offsetx = $('.card-choose').offset().left
     count = 0
 
@@ -306,7 +316,8 @@ $ ->
         type: 'GET'
         url: "/chess/pick_#{chosen}"
         success: (data) ->
-          $('#link-field').val data.link
+          $('#link-field').val data.sharelink
+          $('#begin-field').val data.link
       $(@).parent(".card-button").addClass 'selected-team'
       $(".front").velocity
         rotateY: "0deg"
@@ -358,16 +369,54 @@ $ ->
         ,
           duration: 400
 
+  $('.back').velocity
+    rotateY: "180deg"
+  ,
+    duration: 0
   if $("#board").size() > 0
     $('body').addClass 'red'
 
+  $('.share-link').click (e)->
+    e.preventDefault()
+    e.stopPropagation()
+    return false
+
+  $('body').on 'click', '.active-modal', ->
+    $('.cards-container').unbind 'click'
+    $('#invite-modal').removeClass 'active-modal'
+    $('.invite-box').velocity
+      opacity: 0
+      translateY: '30px'
+
   $('.cards-container').hover ->
+    if $('.idle-card').hasClass 'card-active'
+      $(@).addClass('pointer')
+      $(@).click ->
+        $('#invite-modal').addClass 'active-modal'
+        $('.invite-box').velocity 'transition.slideDownIn'
+        $('.share-card > img').addClass('pointer')
+        # $('.cards-container').mouseleave()
+
     $(@).addClass 'hovering'
     count = -2
+    $('.idle-card > img').velocity
+      rotateY: "180deg"
+    ,
+      duration: 200
+    $('.back').velocity
+      rotateY: "180deg"
+    ,
+      duration: 0
+    $('.back').velocity
+      rotateY: "0deg"
+    ,
+      duration: 200
+    $('.back').css
+      opacity: 1
     $('.cards').find('.card-active').each ->
       count += 1
       $(@).stop().velocity
-        opacity: 1
+        # opacity: 1
         translateX: "#{110 * count}px"
         rotateZ: "#{0 * count}deg"
       ,
@@ -382,12 +431,22 @@ $ ->
         duration: 800
         easing: "spring"
   , ->
+    $(@).removeClass('pointer')
+    $(@).unbind 'click'
+    $('.idle-card > img').stop().velocity
+      rotateY: "0deg"
+    ,
+      duration: 200
+    $('.back').stop().velocity
+      rotateY: "180deg"
+    ,
+      duration: 200
     $(@).removeClass 'hovering'
     count = -2
     $('.cards').find('.card-active').each ->
       count += 1
       $(@).stop().velocity
-        opacity: 1
+        # opacity: 1
         translateX: "#{80 * count}px"
         rotateZ: "#{10 * count}deg"
       ,
@@ -481,6 +540,9 @@ $ ->
 
   $('body').on 'click touchstart', 'td', ->
     unless piece_selected
+      if player != window.turn
+        $(".my-card.#{window.turn}-turn-card").addClass('card-active')
+        animateCards()
       unless player == window.turn == $(@).data('color')
         return
       # if $('#board').data('check') == turn

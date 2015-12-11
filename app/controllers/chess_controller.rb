@@ -9,7 +9,7 @@ class ChessController < ApplicationController
     session[:team] = 'red'
     hash = Game.create(state: Chess.new, stats: Stats.new(creator: 'red')).to_param
     respond_to do |format|
-      format.json { render json: { success: true, link: new_game_url(id: hash)} }
+      format.json { render json: { success: true, link: new_game_url(id: hash, team: 'red'), sharelink: new_game_url(id: hash, team: 'blue')} }
     end
   end
 
@@ -17,7 +17,7 @@ class ChessController < ApplicationController
     session[:team] = 'blue'
     hash = Game.create(state: Chess.new, stats: Stats.new(creator: 'blue')).to_param
     respond_to do |format|
-      format.json { render json: { success: true, link: new_game_url(id: hash)} }
+      format.json { render json: { success: true, link: new_game_url(id: hash, team: 'blue'), sharelink: new_game_url(id: hash, team: 'red')} }
     end
   end
 
@@ -27,11 +27,16 @@ class ChessController < ApplicationController
   def show
     id = Hashids.new("checkmate", 8).decode(params[:id]).try(:first)
     game = Game.find(id)
+    stats = game.stats
+
+    session[:team] = params[:team]
 
     unless session[:team]
-      session[:team] = stats.other_team
+      session[:team] = 'spectator'
     end
 
+
+    @link = new_game_url(game, team: 'blue')
     @player = session[:team]
     @id = id
 
@@ -57,7 +62,6 @@ class ChessController < ApplicationController
     else
       stats.touch_blue
     end
-
 
     red_active, blue_active = stats.red_active?, stats.blue_active?
 

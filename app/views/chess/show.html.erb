@@ -12,17 +12,29 @@
       <div class="my-card blue-team-card">
         <%= image_tag('cards/blue_team.png')%>
       </div>
-      <div class="my-card red-idle-card">
+      <div class="my-card idle-card red-idle-card">
         <%= image_tag('cards/red_idle.png')%>
+        <div class="invite my-card back">
+          <%= image_tag('cards/link.png')%>
+        </div>
       </div>
-      <div class="my-card blue-idle-card">
+      <div class="my-card idle-card blue-idle-card">
         <%= image_tag('cards/blue_idle.png')%>
+        <div class="invite my-card back">
+          <%= image_tag('cards/link.png')%>
+        </div>
       </div>
       <div class="my-card red-check-card">
         <%= image_tag('cards/red_check.png')%>
       </div>
       <div class="my-card blue-check-card">
         <%= image_tag('cards/blue_check.png')%>
+      </div>
+      <div class="my-card red-turn-card turn-card">
+        <%= image_tag('cards/red_turn.png')%>
+      </div>
+      <div class="my-card blue-turn-card turn-card">
+        <%= image_tag('cards/blue_turn.png')%>
       </div>
     </div>
   </div>
@@ -49,6 +61,22 @@
   <% end %>
 
 </div>
+
+<div id="invite-modal">
+  <div class="center">
+    <div class="invite-box center">
+      <div class="share-card">
+        <%= image_tag('cards/share.png')%>
+      </div>
+      <div class="share-link center">
+        <span class="background-black">
+          <%= @link %>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <%= audio_tag "swish.mp3", class: "audio-play" %>
 
 </div>
