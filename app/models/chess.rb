@@ -18,7 +18,7 @@ end
 
 class Chess
 
-  attr_accessor :board, :turn, :graveyard, :check, :shadow, :status
+  attr_accessor :board, :turn, :graveyard, :check, :shadow, :status, :last_move
 
   def initialize
     @board = Board.new(self)
@@ -28,6 +28,7 @@ class Chess
     @new_dead = []
     @shadow = false
     @graveyard = []
+    @last_move = nil
     set_up_board
   end
 
@@ -101,6 +102,7 @@ class Chess
     @turn = (@turn == :top ? :bottom : :top)
     @check = nil
     @check = king_in_check?
+    @last_move = [from, to]
 
     if board.possible_moves_for_team(turn).size == 0
       if @check == color_to_red_blue(turn)

@@ -6,7 +6,7 @@
         <% color = piece.top? ? "blue" : "red" %>
         <% (background = i % 2 == 0 ? "red" : "blue")%>
         <% (background = i % 2 == 0 ? "blue" : "red") if j % 2 != 0 %>
-        <td class="<%= "#{background} #{"in-check" if king_check == color && piece.class.to_s.downcase == "king"}"%> " data-coord="<%= "#{@chess.letters[j]}#{i+1}" %>" data-moves="<%= piece.possible_moves( Coordinate.new(x: j + 1, y: i + 1), @chess.board).map { |coord| coord.to_s } %>" data-color="<%= color %>">
+        <td id="<%= "#{@chess.letters[j]}#{i+1}" %>" class="<%= "#{background} #{"in-check" if king_check == color && piece.class.to_s.downcase == "king"}"%> " data-coord="<%= "#{@chess.letters[j]}#{i+1}" %>" data-moves="<%= piece.possible_moves( Coordinate.new(x: j + 1, y: i + 1), @chess.board).map { |coord| coord.to_s } %>" data-color="<%= color %>">
           <% if !piece.is_a?(NoPiece) %> 
             <div class="<%= (@player == color) && (piece.color == @chess.turn) ? 'you-piece' : 'them-piece' %> piece <%="#{piece.class.to_s.downcase} #{piece.color}  #{color}-team"%>">
               <%= image_tag "#{color}_#{piece.class.to_s.downcase}.png" %>

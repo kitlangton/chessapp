@@ -64,10 +64,11 @@ class ChessController < ApplicationController
     chess = game.state
     @new_dead = chess.new_dead
     @chess = game.state
+    last_move = @chess.last_move
     turn = @chess.color_to_red_blue(@chess.turn)
 
     respond_to do |format|
-      format.json { render json: { success: true, red_active: red_active, blue_active: blue_active, status: @chess.status, turn: turn, html: (render_to_string 'chess/_board.html.erb', layout: false), graveyard: (render_to_string 'chess/_graveyard.html.erb', layout: false) } }
+      format.json { render json: { success: true, last_move: last_move, red_active: red_active, blue_active: blue_active, status: @chess.status, turn: turn, html: (render_to_string 'chess/_board.html.erb', layout: false), graveyard: (render_to_string 'chess/_graveyard.html.erb', layout: false) } }
     end
   end
 

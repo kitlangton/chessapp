@@ -33,6 +33,29 @@ checkmated = ->
   $('body').velocity
     backgroundColor: "#000"
 
+movePiece = (from, to) ->
+  from = $("##{from}")
+  to = $("##{to}")
+  mover = from.find(".piece")
+  captured = to.find(".piece")
+  ydist = to.offset().top - from.offset().top
+  xdist = to.offset().left - from.offset().left
+  $(".audio-play")[0].play()
+  if captured.size() > 0
+    $(".death-audio")[0].play()
+  $('.possible_move').each ->
+    $(@).removeClass("possible_move")
+  captured.velocity "transition.slideUpOut"
+  mover.velocity
+    translateX: "#{xdist}px",
+    translateY: "#{ydist}px"
+  ,
+    easing: [0.175, 0.885, 0.32, 1.175]
+
+
+console.log movePiece
+
+
 animateCards = ->
   count = -2
   # $('.my-card:not(.card-active)').velocity
@@ -93,8 +116,8 @@ update_state = (player) ->
     type: "GET"
     url: "/chess/game_state/#{window.id}"
     success: (data) ->
-      updateCards(data)
       unless !window.updated && data.turn == player
+        updateCards(data)
         setTimeout ->
           update_state(player)
         ,
@@ -103,19 +126,28 @@ update_state = (player) ->
       window.updated = true
       console.log data.new_dead
       console.log data
-      $('.board-container').html data.html
-      $('.graveyard-container').html data.graveyard
-      piece_selected = false
-      if data.turn == 'blue'
-        window.turn = 'blue'
-        $('body').addClass('blue')
-      else
-        window.turn = 'red'
-        $('body').removeClass('blue')
-      $(".piece.#{data.turn}-team").velocity 'callout.bounce',
-        stagger: 50
-        drag: true
-      updateCards(data)
+      movePiece(data.last_move[0], data.last_move[1])
+      setTimeout ->
+        $('.board-container').html data.html
+        $('.graveyard-container').html data.graveyard
+        setTimeout ->
+          piece_selected = false
+          if data.turn == 'blue'
+            window.turn = 'blue'
+            $('body').addClass('blue')
+          else
+            window.turn = 'red'
+            $('body').removeClass('blue')
+          $(".piece.#{data.turn}-team").velocity 'callout.bounce',
+            stagger: 50
+            drag: true
+          updateCards(data)
+          if $("#board").data 'check'
+            $(".check-audio")[0].play()
+        ,
+          400
+      ,
+        400
       setTimeout ->
         update_state(player)
       ,
@@ -574,13 +606,26 @@ $ ->
       $('.possible_move').each ->
         $(@).removeClass("possible_move")
       $(@).find(".piece").velocity "transition.slideUpOut"
+      $(".audio-play")[0].play()
+      if $(@).find('.piece').size() > 0
+        $(".death-audio")[0].play()
       $(piece).velocity
         translateX: "#{xdist}px",
         translateY: "#{ydist}px" 
       ,
         easing: [0.175, 0.885, 0.32, 1.175]
-      $(".audio-play")[0].play()
       $('#move_to').val $(@).data('coord')
+      setTimeout -> 
+        if window.turn == 'red'
+          window.turn = 'blue'
+          $('body').addClass('blue')
+        else
+          window.turn = 'red'
+          $('body').removeClass('blue')
+        $(".piece.#{window.turn}-team").velocity 'callout.bounce',
+          stagger: 50
+          drag: true
+      , 300
 
       setTimeout ->
         $.ajax
@@ -595,22 +640,13 @@ $ ->
             $('.board-container').html data.html
             $('.graveyard-container').html data.graveyard
             piece_selected = false
-            if window.turn == 'red'
-              window.turn = 'blue'
-              $('body').addClass('blue')
-            else
-              window.turn = 'red'
-              $('body').removeClass('blue')
-            $(".piece.#{window.turn}-team").velocity 'callout.bounce',
-              stagger: 50
-              drag: true
             updateCards(data)
             return false
           error: (data) ->
             console.log data
             return false
       ,
-        100
+        200
 
 
 
