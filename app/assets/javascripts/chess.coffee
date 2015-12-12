@@ -646,7 +646,7 @@ $ ->
             console.log data
             return false
       ,
-        200
+        600
 
 
 
